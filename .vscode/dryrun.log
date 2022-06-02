@@ -1,5 +1,0 @@
-make --dry-run --always-make --keep-going --print-directory
-make: Entering directory '/home/waynes/ccprog2/mp'
-gcc mp.c -o mp -Wall
-make: Leaving directory '/home/waynes/ccprog2/mp'
- 
