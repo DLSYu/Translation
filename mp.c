@@ -127,12 +127,13 @@ int main()
 int menu()
 {
     int userInput;
+    int i;
     string30 divider = "---------------------------";
     string20 menuOptions[3] = {"Translate", "Manage Data", "Exit"};
 
     printf("\tMain Menu\n%s\n", divider);
 
-    for (int i = 0; i < 3; i++)
+    for (i = 0; i < 3; i++)
     {
         printf("[%i] %s\n", (i + 1) % 3, menuOptions[i]);
     }
@@ -144,12 +145,13 @@ int menu()
 int manageDataInput()
 {
     int userInput;
+    int i;
     string30 divider = "---------------------------";
     string20 menuOptions[10] = {"Add Entry", "Add Translations", "Delete Entry", "Delete Translation", "Display All Entry", "Search Word", "Search Translation", "Export", "Import", "Exit"};
 
     printf("\tManage Data\n%s\n", divider);
 
-    for (int i = 0; i < 10; i++)
+    for (i = 0; i < 10; i++)
     {
         printf("[%i] %s\n", (i + 1) % 10, menuOptions[i]);
     }
