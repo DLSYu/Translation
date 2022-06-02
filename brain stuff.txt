@@ -1,0 +1,66 @@
+main menu = {"Translate", "Manage Data", "Exit"};
+USERINPUT1
+[1] Translate
+[2] Manage Data
+[0] Exit
+
+
+[1]
+(skip)
+
+[2] manage data
+
+
+Tokenize //string20 string [150]
+{
+    1. Split Text
+        -for loop 150 times
+                -make it ''
+            -How do we cut text?
+                -BodyofText
+                -while loop // != 0
+                    -if char == ' ' || ',' || '.' || '\'' 
+                    -count++ while not encounter char ' '
+                    -i is starting index of new word 
+                    -strncpy(temp, BodyofText+i, count)
+            -strcpy(string[i], cut text)
+    2. Remove Punct
+    3. Spaced by space   
+}
+
+Removal(Weakness double symbol back to back) 
+{
+    -BodyofText
+    while Text[i]!='\0'
+        if ',' || '.' || '\'  (symbol)
+            -delete symbol by Text[i]= Text[i+1]
+            -shift array to the body of text
+}
+
+
+Data Structures
+Typedef char String[20]// lang-trans pair letters
+Language[10]    // 10
+Translation[10] // 10
+Entry[150]      // 150 entry
+
+struct Entry{
+    String Language[10];    
+    String Word[10];
+    int count;
+};
+
+milestones
+//
+gen func
+//
+delete func 
+Translate
+//
+export
+import
+//
+testing
+
+
+
