@@ -12,12 +12,20 @@ MP WOOHOO
 typedef char string20[20];
 typedef char string30[30];
 
-struct Entry{
+struct Entry
+{
     string20 word[10];
-    string20 language[10];    
+    string20 language[10];
     int count;
 };
 typedef struct Entry entry;
+
+struct Node
+{
+    struct Node *next;
+    int data;
+};
+typedef struct Node intNode;
 
 // --------------------------------------
 
@@ -42,7 +50,7 @@ int main()
     bool overData;
 
     overMenu = false;
-    
+
     while (!overMenu)
     {
         userInputMenu = menu();
@@ -106,7 +114,7 @@ int main()
                     break;
 
                 default:
-                break;
+                    break;
                 }
             }
             break;
@@ -127,12 +135,11 @@ int main()
 int menu()
 {
     int userInput;
-    int i;
     string30 divider = "---------------------------";
     string20 menuOptions[3] = {"Translate", "Manage Data", "Exit"};
 
     printf("\tMain Menu\n%s\n", divider);
-
+    int i;
     for (i = 0; i < 3; i++)
     {
         printf("[%i] %s\n", (i + 1) % 3, menuOptions[i]);
@@ -145,12 +152,11 @@ int menu()
 int manageDataInput()
 {
     int userInput;
-    int i;
     string30 divider = "---------------------------";
     string20 menuOptions[10] = {"Add Entry", "Add Translations", "Delete Entry", "Delete Translation", "Display All Entry", "Search Word", "Search Translation", "Export", "Import", "Exit"};
 
     printf("\tManage Data\n%s\n", divider);
-
+    int i;
     for (i = 0; i < 10; i++)
     {
         printf("[%i] %s\n", (i + 1) % 10, menuOptions[i]);
@@ -168,6 +174,14 @@ void addEntry()
     // ask if new
     // if no return to manage data; if yes ask for new entry (do while [continue? and at least 1 char])
     // f(x) - add translation to new id
+
+    string20 word;
+    string30 language;
+    printf("word: ");
+    scanf("%s", word);
+    printf("language: ");
+    scanf("%s", language);
+
     return;
 }
 
@@ -210,4 +224,35 @@ void export()
 void import()
 {
     return;
+}
+
+void addValToLinked(intNode *head, int data)
+{
+    //  (intNode)
+    intNode *currentNode = head;
+    // get to last node
+    while (currentNode->next != NULL)
+    {
+        currentNode = currentNode->next;
+    }
+
+    // new node
+    intNode *newNode = (intNode *)malloc(sizeof(intNode));
+
+    newNode->data = data;
+    newNode->next = NULL;
+
+    currentNode->next = newNode;
+    return;
+}
+
+void freeList(intNode *node)
+{
+    intNode *nodeTmp = NULL;
+    while (node != NULL)
+    {
+        nodeTmp = node;
+        node = node->next;
+        free(nodeTmp);
+    }
 }
