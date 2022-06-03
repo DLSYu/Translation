@@ -2,8 +2,8 @@
 TrANsLaTiOn ProGrAm
 
 ### quick links
-https://www.opentechguides.com/how-to/article/c/142/linked-list-insert.html
-https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
+- https://www.opentechguides.com/how-to/article/c/142/linked-list-insert.html
+- https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
 
 ## List of helper functions
 - searchAllId()
