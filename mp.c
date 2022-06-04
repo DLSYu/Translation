@@ -40,6 +40,10 @@ void searchWord();
 void searchTranslation();
 void export();
 void import();
+void searchAllId(intNode *head, string20 word, string30 language);
+void printAllId(intNode *head);
+void addValToLinked(intNode *head, int data);
+void freeList(intNode *node);
 
 // --------------------------------------
 int main()
@@ -187,6 +191,12 @@ void addEntry()
 
 void addTranslation()
 {
+    string20 word;
+    string30 language;
+    printf("word: ");
+    scanf("%s", word);
+    printf("language: ");
+    scanf("%s", language);
 
     return;
 }
@@ -225,6 +235,16 @@ void import()
 {
     return;
 }
+
+void searchAllId(intNode *head, string20 word, string30 language){
+    
+}
+
+
+void printAllId(intNode *head){
+
+}
+
 
 void addValToLinked(intNode *head, int data)
 {
