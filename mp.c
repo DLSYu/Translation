@@ -1,5 +1,6 @@
 /*
-MP WOOHOO
+waynes wu
+hanz yu
 */
 
 #include <stdio.h>
