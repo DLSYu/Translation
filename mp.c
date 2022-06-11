@@ -27,6 +27,7 @@ typedef struct Entry entry;
 
 struct Node {
   struct Node *next;
+  struct Node *back;
   int data;
 };
 typedef struct Node intNode;
@@ -47,13 +48,13 @@ void searchTranslation(entry allEntries[], int *allEntriesCount);
 // helper
 intNode *searchAllId(intNode *head, string20 word, string30 language,
                      entry allEntries[], int *allEntriesCount);
-void printAllId(intNode *head, entry allEntries[], int *allEntriesCount);
+int printAllId(intNode *head, entry allEntries[], int *allEntriesCount);
 void printList(intNode *head);
 int helper_strcmp(const void *str1, const void *str2);
 bool helper_add_translation(entry *a);
 entry sortInsta(entry list);
 // linked list stuff
-intNode *addValToLinked(intNode *head, int data);
+intNode *addValToLinked(intNode *head, intNode *prev, int data);
 void freeList(intNode *node);
 
 // --------------------------------------
@@ -192,7 +193,7 @@ void addEntry(entry allEntries[], int *allEntriesCount) {
   // and at least 1 char]) f(x) - add translation to new id
 
   intNode *listOfMatched = NULL;
-  int nChoice, nCurrentCount = *allEntriesCount;
+  int id, nCurrentCount = *allEntriesCount;
   string20 word;
   string30 language;
   printf("language: ");
@@ -216,15 +217,14 @@ void addEntry(entry allEntries[], int *allEntriesCount) {
     printf("\nIs your entry listed below?\n");
 
     printf("[0] New entry?\n\n");
-    printAllId(listOfMatched, allEntries, allEntriesCount);
-    scanf("%d", &nChoice);
-
-    if (nChoice > 0) {
+    id = printAllId(listOfMatched, allEntries, allEntriesCount);
+    //
+    if (id != -1) {
       printf("Returning to Manage Data\n");
       return;
     }
-
-    else if (nChoice == 0) {
+  // means user pressed exit
+    else {
       // create entry
       printf("Creating Entry...\n");
       strcpy(allEntries[nCurrentCount].language[0], language);
@@ -244,7 +244,7 @@ void addEntry(entry allEntries[], int *allEntriesCount) {
 // dont forget to -1 on count when used in indexing
 void addTranslation(entry allEntries[], int *allEntriesCount) {
   intNode *listOfMatched = NULL;
-  int nChoice;
+  int id;
   string20 word;
   string30 language;
   scanf("%s", language);
@@ -255,6 +255,8 @@ void addTranslation(entry allEntries[], int *allEntriesCount) {
   listOfMatched =
       searchAllId(listOfMatched, word, language, allEntries, allEntriesCount);
   // no existing entry->error message_return to manage data
+
+  // NO ELEMENTS
   if (listOfMatched == NULL) {
     // print you should use add entry first
     printf("git fucked return to manage data\n");
@@ -264,37 +266,27 @@ void addTranslation(entry allEntries[], int *allEntriesCount) {
   // more than or equal one choose the entry
   else {
     int id;
+    // ONLY 1 ENTRY
     if (listOfMatched->next == NULL) {
       id = listOfMatched->data;
     }
 
+    // MORE THAN 1 ENTRY
     else {
-      printf("\nWhich entry?\n");
-      // printf("[0] Not listed here?\n\n");
-
-      printAllId(listOfMatched, allEntries, allEntriesCount);
-      scanf("%d", &nChoice);
-      if (nChoice == 0) {
+      
+      id = printAllId(listOfMatched, allEntries, allEntriesCount);
+      if (id != -1) {
         printf("git fucked return to manage data\n");
         return;
       }
 
-      intNode *tmp = listOfMatched;
-      int i;
-
-      // remember that link list requires address to address so we loop to get
-      // next address
-      for (i = 0; i < nChoice - 1; i++) {
-        tmp = tmp->next;
-      }
-      id = tmp->data;
-    }
 
     while (helper_add_translation(&allEntries[id]))
       ;
   }
   freeList(listOfMatched);
   return;
+}
 }
 
 void deleteEntry(entry allEntries[], int *allEntriesCount) {
@@ -547,37 +539,127 @@ intNode *searchAllId(intNode *head, string20 word, string30 language,
                      entry allEntries[], int *allEntriesCount) {
   int i;
   int count = *allEntriesCount;
+  intNode *prev = NULL;
   for (i = 0; i < count; i++) {
     int j;
     for (j = 0; j < allEntries[i].count; j++) {
       if (strcmp(allEntries[i].word[j], word) == 0 &&
           strcmp(allEntries[i].language[j], language) == 0) {
-        head = addValToLinked(head, i);
+        head = addValToLinked(head, prev, i);
+        prev = head;
       }
     }
   }
   return head;
 }
 
-void printAllId(intNode *head, entry allEntries[], int *allEntriesCount) {
-  int i = 1;
-  intNode *currentNode = head;
+int printAllId(intNode *head, entry allEntries[], int *allEntriesCount) {
 
-  while (currentNode != NULL) {
+  char nAct=' ';
+  int currEntryCount = *allEntriesCount;
+  intNode *currentNode = head;
+// currentNode = currentNode->next is to go next
+// ->back to go back
+//  ->back == NULL means first element meanwhile ->next == NULL means last element
+
+  while (true) {
+    // means no element
     int id = currentNode->data;
     int j;
-    for (j = 0; j < allEntries[id].count; j++) {
-      printf("[%i] %10s|%10s\n", i, allEntries[id].language[j],
-             allEntries[id].word[j]);
+    int i;
+    
+    entry tmpEntry = allEntries[id];
+    tmpEntry = sortInsta(tmpEntry);
+
+    for (i = 0; i < currEntryCount; i++) {
+      printf("[%i] %10s|%10s\n", i + 1, tmpEntry.language[i], tmpEntry.word[i]);
     }
     printf("\n");
-    i++;
-    currentNode = currentNode->next;
+    
+    // if not last
+    if (currentNode->next != NULL)
+      printf("[N]ext, ");
+      
+    // if not first
+    if (currentNode->back != NULL)
+      printf("[P]revious, ");
+
+    // always prints
+    printf("[C]hoice, ");
+    printf("or E[X]it\n\n");
+    printf("Action: ");
+    scanf(" %c", &nAct);
+    
+    switch (nAct) {
+    case 'N':
+      if (currentNode->next != NULL)
+        currentNode = currentNode->next;
+      break;
+    case 'P':
+      if (currentNode->back != NULL)
+        currentNode = currentNode->back;
+      break;
+    case 'C':
+      return currentNode->data;
+    case 'X':
+      printf("\nReturning to Manage Data...\n\n");
+      return -1;
+    default:
+      printf("try again lemao\n");
+      break;
+    }
+    
   }
-  return;
+  
+  // while (true) {
+  //   entry tmpEntry = allEntries[nPage];
+
+  //   if (nCount == 0) {
+  //     printf("Add new entries first\nyou will now be redirected to manage "
+  //            "data...\n");
+  //     return;
+  //   }
+
+  //   // display first entry(on access, otherwise display nPage)
+  //   int currEntryCount = tmpEntry.count;
+  //   printf("Entry has %i count\n\n", currEntryCount);
+  //   tmpEntry = sortInsta(tmpEntry);
+  //   // sort here
+  //   // linear sort cuz im monkey
+
+  //   for (i = 0; i < currEntryCount; i++) {
+  //     printf("[%i] %10s|%10s\n", i + 1, tmpEntry.language[i], tmpEntry.word[i]);
+  //   }
+
+  //   if (nPage != nCount-1)
+  //     printf("[N]ext, ");
+  //   if (nPage != 0)
+  //     printf("[P]revious, ");
+  //   printf("or E[X]it\n\n");
+  //   printf("Action: ");
+  //   scanf(" %c", &nAct);
+
+  //   // ask for action('N'ext, 'P'revious, 'X'-it)
+  //   switch (nAct) {
+  //   case 'N':
+  //     if (nPage != nCount-1)
+  //       nPage++;
+  //     break;
+  //   case 'P':
+  //     if (nPage != 0)
+  //       nPage--;
+  //     break;
+  //   case 'X':
+  //     printf("\nReturning to Manage Data...\n\n");
+  //     return;
+  //   default:
+  //     printf("try again lemao\n");
+  //     break;
+  //   }
+  // }
 }
 
-intNode *addValToLinked(intNode *head, int data) {
+intNode *addValToLinked(intNode *head, intNode *prev, int data) {
 
   intNode *currentNode = head;
 
@@ -585,18 +667,23 @@ intNode *addValToLinked(intNode *head, int data) {
   newNode->data = data;
   newNode->next = NULL;
 
+  // if no element
   if (currentNode == NULL) {
     head = newNode;
     return head;
   }
 
   while (currentNode->next != NULL) {
+    // data already exists
     if (currentNode->data == data)
       return head;
+    // go next
     currentNode = currentNode->next;
   }
 
+  // add data
   currentNode->next = newNode;
+  currentNode->back = prev;
   return head;
 }
 
@@ -645,6 +732,7 @@ bool helper_add_translation(entry *a) {
   a->count++;
   return true;
 }
+
 int sortstring(const void *str1, const void *str2) {
   char *const *pp1 = str1;
   char *const *pp2 = str2;
