@@ -214,9 +214,6 @@ void addEntry(entry allEntries[], int *allEntriesCount) {
 
   // found similar entries
   else {
-    printf("\nIs your entry listed below?\n");
-
-    printf("[0] New entry?\n\n");
     id = printAllId(listOfMatched, allEntries, allEntriesCount);
     //
     if (id != -1) {
@@ -571,7 +568,7 @@ int printAllId(intNode *head, entry allEntries[], int *allEntriesCount) {
     entry tmpEntry = allEntries[id];
     tmpEntry = sortInsta(tmpEntry);
 
-    for (i = 0; i < currEntryCount; i++) {
+    for (i = 0; i < allEntries[id].count; i++) {
       printf("[%i] %10s|%10s\n", i + 1, tmpEntry.language[i], tmpEntry.word[i]);
     }
     printf("\n");
@@ -602,7 +599,6 @@ int printAllId(intNode *head, entry allEntries[], int *allEntriesCount) {
     case 'C':
       return currentNode->data;
     case 'X':
-      printf("\nReturning to Manage Data...\n\n");
       return -1;
     default:
       printf("try again lemao\n");
@@ -683,7 +679,7 @@ intNode *addValToLinked(intNode *head, intNode *prev, int data) {
 
   // add data
   currentNode->next = newNode;
-  currentNode->back = prev;
+  currentNode->next->back = prev;
   return head;
 }
 
