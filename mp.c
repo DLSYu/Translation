@@ -244,8 +244,8 @@ void addTranslation(entry allEntries[], int *allEntriesCount) {
   int id;
   string20 word;
   string30 language;
-  scanf("%s", language);
   printf("language: ");
+  scanf("%s", language);
   printf("word: ");
   scanf("%s", word);
 
@@ -276,11 +276,9 @@ void addTranslation(entry allEntries[], int *allEntriesCount) {
         printf("git fucked return to manage data\n");
         return;
       }
-
-
-    while (helper_add_translation(&allEntries[id]))
-      ;
   }
+    
+  while (helper_add_translation(&allEntries[id]));
   freeList(listOfMatched);
   return;
 }
@@ -514,6 +512,13 @@ void displayAllEntries(entry allEntries[], int *allEntriesCount) {
 void searchWord(entry allEntries[], int *allEntriesCount) {
   // ask word
   // arrange by first entries
+  string20 word;
+  printf("enter word");
+  scanf("%s",word);
+  intNode* listOfMatched = NULL;
+  searchAllId(listOfMatched, word, "", allEntries, allEntriesCount);
+  
+  
   return;
 }
 
@@ -536,12 +541,23 @@ intNode *searchAllId(intNode *head, string20 word, string30 language,
                      entry allEntries[], int *allEntriesCount) {
   int i;
   int count = *allEntriesCount;
+  bool skipLang = false;
+
+  if(strcmp(language, "") == 0)
+    skipLang = true;
+  
   intNode *prev = NULL;
   for (i = 0; i < count; i++) {
     int j;
     for (j = 0; j < allEntries[i].count; j++) {
-      if (strcmp(allEntries[i].word[j], word) == 0 &&
-          strcmp(allEntries[i].language[j], language) == 0) {
+      bool wordMatches = strcmp(allEntries[i].word[j], word) == 0;
+      bool langMatches;
+      
+      if(skipLang)
+        langMatches = true;
+      else
+        langMatches = strcmp(allEntries[i].language[j], language) == 0;
+      if (wordMatches && langMatches) {
         head = addValToLinked(head, prev, i);
         prev = head;
       }
