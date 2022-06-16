@@ -8,6 +8,7 @@ other students and/or persons. <Waynes Wu>, DLSU ID# <number> <Yu Yu>, DLSU ID#
 <number>
 */
 
+//Declaration of Libraries
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,10 +16,17 @@ other students and/or persons. <Waynes Wu>, DLSU ID# <number> <Yu Yu>, DLSU ID#
 #include <string.h>
 // --------------------------------------
 
+/*
+Declaration of Strings
+string20 - for language and word
+string30 - divider
+string52 - read line in files
+*/
 typedef char string20[20];
 typedef char string30[30];
 typedef char string52[52];
 
+//Declaration of entry structure
 struct Entry {
   string20 word[10];
   string20 language[10];
@@ -26,15 +34,19 @@ struct Entry {
 };
 typedef struct Entry entry;
 
+//declaration of linked-list structure
 struct Node {
-  struct Node *next;
-  struct Node *back;
-  int data;
+  struct Node *next; //point to next address
+  struct Node *back; //point to previous address
+  int data; //value held in current linked-list
 };
 typedef struct Node intNode;
 
 // --------------------------------------
 
+// Function Prototypes
+
+//Feature Functions
 int menu();
 int manageDataInput();
 void translateMenu(entry allEntries[], int *allEntriesCount);
@@ -47,7 +59,8 @@ void searchWord(entry allEntries[], int *allEntriesCount);
 void export(entry allEntries[], int *allEntriesCount);
 void import(entry allEntries[], int *allEntriesCount);
 void searchTranslation(entry allEntries[], int *allEntriesCount);
-// helper
+
+// Helper Functions
 intNode *searchAllId(intNode *head, string20 word, string30 language,
                      entry allEntries[], int *allEntriesCount);
 int printAllId(intNode *head, entry allEntries[], int *allEntriesCount,
@@ -57,11 +70,34 @@ int helper_strcmp(const void *str1, const void *str2);
 bool helper_add_translation(entry *a);
 entry sortInsta(entry list);
 int nCharTil(string52 a, char b);
-// linked list stuff
+void sortInter(entry tmpAllEntries[], entry allEntries[], int *allEntriesCount);
+
+// Linked list functions
 intNode *addValToLinked(intNode *head, intNode *prev, int data);
 void freeList(intNode *node);
 
 // --------------------------------------
+
+/* Main Function
+ Menu Options to access all features
+INTEGER VARIABLES 
+     @param userInputMenu
+      -Access Translation Menu or Manage Data Menuu
+     @param userInputMenu
+      -Access Manage Data Menu Featuress
+     @param allEntriesCount
+      -Count of how many entries are currntly contained
+	
+BOOL VARAIBLES
+     @param overMenu
+       -Checks whether the loop for Menu is over, ends     program when condition (!overMenu) becomes false
+     @param overData
+       -Checks whether the loop for Manage Data is over, ends program when condition (!overDatta) becomes false
+
+STRUCT VARIABLES
+     @param allEntries[150]
+        -Collection of entries that will be used
+*/
 int main() {
   int userInputMenu, userInputData;
 
@@ -149,6 +185,22 @@ int main() {
   return 0;
 }
 
+
+/* menu Function
+This function displays the Main menu options and accepts the user input on where to go
+
+INTEGER VARIABLES 
+    @param userInput
+      -accepts the user input to access features
+	
+STRING VARIABLES
+     @param divider
+       -creates a divider for  UI
+     @param menuOptions
+       -contains the name of the featuires user can access
+
+@returns userInput
+*/
 int menu() {
   int userInput;
   string30 divider = "---------------------------";
@@ -164,6 +216,22 @@ int menu() {
   return userInput;
 }
 
+
+/*manageDataInput Function
+This function displays the Data Manage options and accepts the user input on where to go
+
+INTEGER VARIABLES 
+    @param userInput
+      -accepts the user input to access features
+	
+STRING VARIABLES
+     @param divider
+       -creates a divider for  UI
+     @param menuOptions
+       -contains the name of the featuires user can access
+
+@return userInput
+*/
 int manageDataInput() {
   int userInput;
   string30 divider = "---------------------------";
@@ -188,6 +256,32 @@ int manageDataInput() {
   return userInput;
 }
 
+
+/* addEntry Function
+This function displays the Data Manage options and accepts the user input on where to go
+
+INTEGER VARIABLES 
+    @param *allEntriesCount
+      -pointer variable for how many collections of entries there are
+    @param id
+      -contains user choice from printAllId
+     @param nCurrentCount
+      -holds value of *allEntriesCount
+STRING VARIABLES
+     @param language
+       -string for user input language
+     @param word
+       -string for user input word
+
+STRUCT VARIABLES
+     @param allEntries[]
+       -pointer variable for collection of all entries
+
+LINKED LIST VARIABLES
+     @param *listOfMatched
+       -will contain linked list of words that matched
+
+*/
 void addEntry(entry allEntries[], int *allEntriesCount) {
   // ask language and word
   // f(x)- search
@@ -241,6 +335,11 @@ void addEntry(entry allEntries[], int *allEntriesCount) {
   freeList(listOfMatched);
   return;
 }
+
+
+/*
+
+*/
 void translateMenu(entry allEntries[], int *allEntriesCount) {
 
   // ask language of source text(Language from), text to be translated(The
@@ -357,6 +456,11 @@ void translateMenu(entry allEntries[], int *allEntriesCount) {
   }
   return;
 }
+
+
+/*
+
+*/
 // dont forget to -1 on count when used in indexing
 void addTranslation(entry allEntries[], int *allEntriesCount) {
   intNode *listOfMatched = NULL;
@@ -404,6 +508,10 @@ void addTranslation(entry allEntries[], int *allEntriesCount) {
   }
 }
 
+
+/*
+
+*/
 void deleteEntry(entry allEntries[], int *allEntriesCount) {
   // Show all entry info- done
 
@@ -455,6 +563,10 @@ void deleteEntry(entry allEntries[], int *allEntriesCount) {
   return;
 }
 
+
+/*
+
+*/
 void deleteTranslation(entry allEntries[], int *allEntriesCount) {
   // Display all entry
 
@@ -570,22 +682,33 @@ void deleteTranslation(entry allEntries[], int *allEntriesCount) {
   return;
 }
 
+
+/*
+
+*/
 void displayAllEntries(entry allEntries[], int *allEntriesCount) {
 
   // new entry element to save current entry
   int i, nCount = *allEntriesCount;
   int nPage = 0;
   char nAct = ' ';
-  // nested for loop for all entries
-  while (true) {
-    entry tmpEntry = allEntries[nPage];
 
+  // base case
     if (nCount == 0) {
       printf("Add new entries first\nyou will now be redirected to manage "
              "data...\n");
       return;
     }
+    //New array for inter entry disp
+    entry tmpAllEntries[150];
+    //sort inter-entry
+    sortInter(tmpAllEntries, allEntries, allEntriesCount);
+  
+  while (true) {
 
+    
+    //This displays per entry
+    entry tmpEntry = tmpAllEntries[nPage];
     // display first entry(on access, otherwise display nPage)
     int currEntryCount = tmpEntry.count;
     printf("Entry has %i count\n\n", currEntryCount);
@@ -631,6 +754,10 @@ void displayAllEntries(entry allEntries[], int *allEntriesCount) {
   return;
 }
 
+
+/*
+
+*/
 void searchWord(entry allEntries[], int *allEntriesCount) {
   // ask word
   // arrange by first entries
@@ -654,6 +781,10 @@ void searchWord(entry allEntries[], int *allEntriesCount) {
   return;
 }
 
+
+/*
+
+*/
 void searchTranslation(entry allEntries[], int *allEntriesCount) {
 
   string20 word;
@@ -680,6 +811,10 @@ void searchTranslation(entry allEntries[], int *allEntriesCount) {
   return;
 }
 
+
+/*
+
+*/
 void export(entry allEntries[], int *allEntriesCount) {
   string30 fName;
   FILE *fExport;
@@ -708,6 +843,10 @@ void export(entry allEntries[], int *allEntriesCount) {
   return;
 }
 
+
+/*
+
+*/
 void import(entry allEntries[], int *allEntriesCount) {
 
   //   Allow textfile to be added in lis of entries
@@ -867,6 +1006,10 @@ intNode *searchAllId(intNode *head, string20 word, string30 language,
   return head;
 }
 
+
+/*
+
+*/
 int printAllId(intNode *head, entry allEntries[], int *allEntriesCount,
                bool nChoice) {
 
@@ -930,6 +1073,10 @@ int printAllId(intNode *head, entry allEntries[], int *allEntriesCount,
   }
 }
 
+
+/*
+
+*/
 intNode *addValToLinked(intNode *head, intNode *prev, int data) {
 
   intNode *currentNode = head;
@@ -1047,3 +1194,89 @@ int nCharTil(string52 a, char b) {
   }
   return 0;
 }
+void sortInter(entry tmpAllEntries[], entry allEntries[], int *allEntriesCount){
+  intNode *withEng = NULL;
+  intNode *withoutEng = NULL;
+  int i, j;
+  int count = *allEntriesCount;
+  
+  // separate the 2
+  for(i = 0; i < count; i++){
+    bool hasEng = false;
+    for(j = 0; j < allEntries[i].count; j++){
+        if(strcmp(allEntries[i].language[j], "english") == 0){
+          hasEng = true;
+        }
+    }
+    if(hasEng)
+      withEng = addValToLinked(withEng, NULL, i);
+    else
+      withoutEng = addValToLinked(withoutEng, NULL, i);
+  }
+
+  int index = 0;
+  // DO ENGLISH FIRST
+  intNode *tmpWithEng = withEng;
+  while(tmpWithEng != NULL){
+
+    int id = tmpWithEng -> data;
+
+    // COPYING ALLENTRIES[ID] LANG AND WORD TO NEW
+    for (j = 0; j < allEntries[id].count; j++){
+      strcpy(tmpAllEntries[index].language[j], allEntries[id].language[j]);
+      strcpy(tmpAllEntries[index].word[j], allEntries[id].word[j]);
+    }
+    // update the count
+    tmpAllEntries[index].count = allEntries[id].count;
+    
+    index++;
+    tmpWithEng = tmpWithEng->next;
+  }
+
+
+// WITHOUT ENGLISH
+  intNode *tmpWithoutEng = withoutEng;
+  
+  while(tmpWithoutEng != NULL){
+
+    int id = tmpWithoutEng -> data;
+
+    // COPYING ALLENTRIES[ID] LANG AND WORD TO NEW
+    for (j = 0; j < allEntries[id].count; j++){
+      strcpy(tmpAllEntries[index].language[j], allEntries[id].language[j]);
+      strcpy(tmpAllEntries[index].word[j], allEntries[id].word[j]);
+    }
+    // update the count
+    tmpAllEntries[index].count = allEntries[id].count;
+    
+    index++;
+    tmpWithoutEng = tmpWithoutEng->next;
+  }
+
+
+  free(withEng);
+  free(withoutEng);
+  return;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
