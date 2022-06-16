@@ -1,10 +1,11 @@
 /*
-This is to certify that this project is my own work, based on my personal
+This is to certify that this project is  our work, based on my personal
 efforts in studying and applying the concepts learned.  We have constructed the
 functions and their respective algorithms and corresponding code by ourselves.
-The program was run, tested, and debugged by my own efforts.  I further certify
+The program was run, tested, and debugged by our efforts.  I further certify
 that I have not copied in part or whole or otherwise plagiarized the work of
-other students and/or persons. <Waynes Wu>, DLSU ID# <number> <Yu, Hanz Patrick>, DLSU ID# 12196665
+other students and/or persons. 
+<Waynes Wu>, DLSU ID# 12110825 <Yu, Hanz Patrick>, DLSU ID# 12196665
 */
 
 // Declaration of Libraries
