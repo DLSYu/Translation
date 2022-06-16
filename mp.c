@@ -1052,6 +1052,11 @@ void import(entry allEntries[], int *allEntriesCount) {
 
   FILE *ptr;
   ptr = fopen(filename, "r");
+  if (ptr == NULL){
+    printf("error file not found\n");
+    printf("returning to mangage data\n");
+    return;
+  }
   bool runtimeHasEntry = (*allEntriesCount != 0);
 
   // runtime has entries(ask entry to be loadded one by one)
