@@ -66,7 +66,6 @@ intNode *searchAllId(intNode *head, string20 word, string30 language,
 int printAllId(intNode *head, entry allEntries[], int *allEntriesCount,
                bool nChoice);
 void printList(intNode *head);
-int helper_strcmp(const void *str1, const void *str2);
 bool helper_add_translation(entry *a);
 entry sortInsta(entry list);
 int nCharTil(string52 a, char b);
@@ -857,9 +856,6 @@ void searchWord(entry allEntries[], int *allEntriesCount) {
   // ask word
   // arrange by first entries
   string20 word;
-  int nPage = 0;
-  int i;
-  char nAct = ' ';
 
   printf("word: ");
   scanf("%s", word);
@@ -875,57 +871,11 @@ void searchWord(entry allEntries[], int *allEntriesCount) {
   }
 
   listOfMatched = sortInterLINKED(allEntries, allEntriesCount, listOfMatched);
-  entry NewList[150]={{}};
-  int index = 0;
+
+
 
   printAllId(listOfMatched, allEntries, allEntriesCount, false);
   
-  // intNode *tmp = listOfMatched;
-  // while (tmp != NULL) {
-  //   int id = tmp->data;
-  //   NewList[index] = allEntries[id];
-  //   index++;
-  //   tmp = tmp->next;
-  // }
-  // while (true) {
-  //   entry tmpEntry = NewList[nPage];
-  //   // display first entry(on access, otherwise display nPage)
-  //   int currEntryCount = tmpEntry.count;
-  //   printf("Entry %d has %i count\n\n", nPage+1,currEntryCount);
-  //   tmpEntry = sortInsta(tmpEntry);
-  //   // sort here
-  //   // linear sort cuz im monkey
-
-  //   for (i = 0; i < currEntryCount; i++) {
-  //     printf("[%i] %10s|%10s\n", i + 1, tmpEntry.language[i], tmpEntry.word[i]);
-  //   }
-
-  //   if (nPage != index - 1)
-  //     printf("[N]ext, ");
-  //   if (nPage != 0)
-  //     printf("[P]revious, ");
-  //   printf("or E[X]it\n\n");
-  //   printf("Action: ");
-  //   scanf(" %c", &nAct);
-
-  //   // ask for action('N'ext, 'P'revious, 'X'-it)
-  //   switch (nAct) {
-  //   case 'N':
-  //     if (nPage != index - 1)
-  //       nPage++;
-  //     break;
-  //   case 'P':
-  //     if (nPage != 0)
-  //       nPage--;
-  //     break;
-  //   case 'X':
-  //     printf("\nReturning to Manage Data...\n\n");
-  //     return;
-  //   default:
-  //     printf("try again lemao\n");
-  //     break;
-  //   }
-  // }
 
   printf("\n");
   free(listOfMatched);
@@ -966,22 +916,9 @@ void searchTranslation(entry allEntries[], int *allEntriesCount) {
     return;
   }
   listOfMatched = sortInterLINKED(allEntries, allEntriesCount, listOfMatched);
-
-
-
   
   printAllId(listOfMatched, allEntries, allEntriesCount, false);
 
-
-
-
-
-
-  
-
-
-
-  
   
   printf("\n");
   free(listOfMatched);
@@ -1096,8 +1033,6 @@ void import(entry allEntries[], int *allEntriesCount) {
             strcpy(allEntries[*allEntriesCount].language[i],
                    holdEntry.language[i]);
             strcpy(allEntries[*allEntriesCount].word[i], holdEntry.word[i]);
-            printf("add %s at index %i\n", allEntries[*allEntriesCount].word[i],
-                   *allEntriesCount);
           }
           allEntries[*allEntriesCount].count = holdEntryCount;
           (*allEntriesCount)++;
@@ -1155,17 +1090,7 @@ void import(entry allEntries[], int *allEntriesCount) {
   }
 
   fclose(ptr);
-  // for(i=0;i<count;i++)
-  //   {
-  //   for(j=0;j<allEntries[i].count;j++)
-  //     {
-  //       fprintf(fExport, "%s: %s\n", allEntries[i].language[j],
-  //       allEntries[i].word[j]);
-  //     }
-  //     fprintf(fExport, "\n");
-  //   }
 
-  // while();
 
   return;
 }
@@ -1181,7 +1106,6 @@ intNode *searchAllId(intNode *head, string20 word, string30 language,
   if (strcmp(language, "") == 0)
     skipLang = true;
 
-  intNode *prev = NULL;
   for (i = 0; i < count; i++) {
     int j;
     for (j = 0; j < allEntries[i].count; j++) {
@@ -1194,8 +1118,7 @@ intNode *searchAllId(intNode *head, string20 word, string30 language,
         langMatches = strcmp(allEntries[i].language[j], language) == 0;
 
       if (wordMatches && langMatches) {
-        head = addValToLinked(head, prev, i);
-        // prev = head;
+        head = addValToLinked(head, NULL, i);
       }
     }
   }
@@ -1284,6 +1207,7 @@ intNode *addValToLinked(intNode *head, intNode *prev, int data) {
     return head;
   }
 
+  // GOES TO THE LAST ELEMENT
   while (currentNode->next != NULL) {
     // data already exists
     if (currentNode->data == data)
@@ -1292,6 +1216,11 @@ intNode *addValToLinked(intNode *head, intNode *prev, int data) {
     currentNode = currentNode->next;
   }
 
+  // LAST NODE WAS NOT CHECKING DURING THE LOOP
+  if (currentNode->data == data)
+    return head;
+
+  
   // add data
   currentNode->next = newNode;
   currentNode->next->back = currentNode;
@@ -1494,3 +1423,4 @@ intNode * withTmp = withEng;
   return newList; 
   
 }
+
